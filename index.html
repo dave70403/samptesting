@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="assets/brand/favicon.ico?v=5" type="image/x-icon">
+    <title>SAPD Penal Tool</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/styles.css">
+    <style>
+    .swal2-popup {
+        background: #1e1e1e !important; /* Warna background gelap */
+        color: #fff !important; /* Warna teks putih */
+        border-radius: 10px;
+    }
+    .swal2-title {
+        color: #ffcc00 !important; /* Warna judul kuning */
+    }
+    .swal2-content {
+        color: #ddd !important; /* Warna teks isi alert */
+    }
+    .swal2-confirm {
+        background: #28a745 !important; /* Tombol hijau */
+        color: white !important;
+        border-radius: 5px;
+    }
+    .swal2-cancel {
+        background: #dc3545 !important; /* Tombol merah */
+        color: white !important;
+        border-radius: 5px;
+    }
+</style>
+
+</head>
+<body class="dark-theme">
+    <div class="container mt-4 dashboard-shell">
+        <header class="text-center mb-4 dashboard-header">
+            <img src="assets/brand/police.png" alt="Police emblem" width="82" class="mb-3 header-emblem">
+            <div class="eyebrow">SAPD • OPERATIONS DESK</div><h1 class="display-4 text-primary">Penal Code <span class="accent">Tools</span></h1>
+            <p class="lead text-secondary">San Andreas Police Department · Charge & Arrest Calculator</p>
+            <div class="d-flex justify-content-center mt-3">
+                <a href="https://police.san-andreas.net/viewtopic.php?p=1033079#p1033079" target="_blank" class="mx-2">
+                    <img src="assets/brand/penalty-icon.png" alt="Website 2" width="25">
+                </a>
+            </div>
+        </header>
+
+        <div class="row g-4">
+            <div class="col-md-14 offset-md-0">
+                <div class="card shadow-sm bg-dark">
+                    <div class="card-body">
+                        <form class="row g-3">
+                            <div class="col-md-12">
+                                <h5 class="card-title text-primary">Suspect ID / Name</h5>
+                                <input type="text" class="form-control bg-dark text-light" id="suspectid" placeholder="Enter Suspect ID / Name...">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm bg-dark mt-4">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">Selected Violations</h5>
+                        <button type="button" id="clear-violations" class="btn btn-warning btn-sm mb-3">Clear All</button>
+                        <button type="button" id="copy-all-codes" class="btn btn-info btn-sm mb-3 ms-2">Copy All Codes</button>
+                        <table id="violate-select" class="table table-hover table-dark">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Violation</th>
+                                    <th>Jailtime</th>
+                                    <th>Fine</th>
+                                    <th>Bail</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <div id="total-summary">
+                            <span><i class="fas fa-gavel"></i> <strong id="total-count">0</strong></span>
+                            <span><i class="fas fa-clock"></i> <strong id="total-jailtime">0</strong></span>
+                            <span><i class="fas fa-dollar-sign"></i> <strong id="total-fine">$0</strong> Fine</span>
+                            <span><i class="fas fa-balance-scale"></i> <strong id="total-bail">$0</strong> Bail</span>
+                        </div>                        
+                    </div>
+                </div>
+
+                <div class="input-group mt-4">
+                    <input type="text" id="arrest" class="form-control bg-dark text-light" value="/arrest 0 0 0 0" disabled>
+                    <button type="button" id="copyarrest" class="btn btn-success">Copy Command</button>
+                </div>
+
+                                <!-- Tambahan Tabel Informasi -->
+                                <div class="card shadow-sm bg-dark mt-4">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-primary">Table Information</h5>
+                                        <table class="table table-hover table-dark">
+                                            <thead>
+                                                <tr>
+                                                    <th>Jailtime (Minutes)</th>
+                                                    <th>Location</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>0 - 60</td>
+                                                    <td>Precinct</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>61+</td>
+                                                    <td>SACF</td>
+                                                </tr>
+                                                <!-- Tambahkan baris baru untuk informasi fine -->
+                                                <tr>
+                                                    <td colspan="2">
+                                                        <small class="text-secondary">
+                                                            <i class="fas fa-info-circle"></i> Jika level karakter suspect adalah 1-3, maka tidak perlu diberikan denda / isi dengan angka 0 (<strong>fine</strong>).
+                                                        </small>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                <div class="card shadow-sm bg-dark mt-4">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">Violation List</h5>
+                        <small class="text-secondary">You can do multiple searches by separating codes with commas (e.g., 1P, 4B, 5K)</small>
+                        <div class="input-group mb-3">
+                        <input type="text" id="search-violation" class="form-control bg-dark text-light" placeholder="Search violation..">
+                            <button type="button" id="clear-search" class="btn btn-outline-secondary d-none">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+
+
+                        <table id="violate-data" class="table table-hover table-dark">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Violation</th>
+                                    <th>Jailtime</th>
+                                    <th>Fine</th>
+                                    <th>Bail</th>
+                                    <th>Action</th>
+                                    <th>Reff</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="text-center mt-5 py-4 text-secondary">
+            <p>&copy; 2026. SAPD-Jogjagamers. dave704</p>
+        </footer>
+    </div>
+
+    <!-- Tombol Scroll to Top -->
+    <button id="scroll-to-top" class="btn btn-primary btn-sm scroll-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="script.js"></script>
+</body>
+</html>
